@@ -90,9 +90,8 @@ class _HomePageState extends State<HomePage> {
               Note note = notes[index];
               return TodoList(
                 taskname: note.heading,
-                note: note.note.toString().substring(0, 20),
+                note: note.note.toString(),
                 folder: note.folder,
-                deleteFunction: (context) => deleteTask(index),
               );
             },
           ),
@@ -103,6 +102,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     List<Note> todayNotes = getNotesForToday();
     List<Note> yesterdayNotes = getNotesForYesterday();
     List<Note> otherNotes = getOtherNotes();

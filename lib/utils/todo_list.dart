@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:todo/data/newDatabase.dart';
 
 class TodoList extends StatelessWidget {
   final String taskname;
   final String note;
   final String folder;
-  Function(BuildContext)? deleteFunction;
   TodoList({
     super.key,
     required this.note,
     required this.taskname,
     required this.folder,
-    required this.deleteFunction
   });
 
   @override
@@ -21,7 +20,9 @@ class TodoList extends StatelessWidget {
         motion: StretchMotion(),
         children: [
           SlidableAction(
-            onPressed: deleteFunction,
+            onPressed: (index){
+              deleteNote(taskname, folder);
+            },
             icon: Icons.delete,
             backgroundColor: Colors.red.shade500,
             borderRadius: BorderRadius.circular(10),

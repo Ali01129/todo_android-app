@@ -51,7 +51,6 @@ List<Note> getNotesForYesterday() {
 List<Note> getOtherNotes() {
   final today = DateTime.now();
   final yesterday = today.subtract(Duration(days: 1));
-
   return notes.where((note) {
     final noteDate = note.timestamp;
     return !(noteDate.year == today.year &&
@@ -61,4 +60,15 @@ List<Note> getOtherNotes() {
             noteDate.month == yesterday.month &&
             noteDate.day == yesterday.day); // Exclude yesterday
   }).toList();
+}
+
+//adding notes function
+void addNote(String heading, String note, String folder) {
+  Note newNote = Note(heading: heading, note: note, folder: folder, timestamp: DateTime.now());
+  notes.add(newNote);
+}
+
+//delete notes
+void deleteNote(String heading,String folder){
+  notes.removeWhere((note)=> note.heading==heading && note.folder==folder);
 }
