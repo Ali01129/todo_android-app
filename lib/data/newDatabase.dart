@@ -63,10 +63,19 @@ List<Note> getOtherNotes() {
 }
 
 //adding notes function
-void addNote(String heading, String note, String folder) {
-  Note newNote = Note(heading: heading, note: note, folder: folder, timestamp: DateTime.now());
+void addNote(String? heading, String? note, String folder) {
+  if (heading == null || heading.isEmpty || note == null || note.isEmpty) {
+    return;
+  }
+  Note newNote = Note(
+    heading: heading,
+    note: note,
+    folder: folder,
+    timestamp: DateTime.now(),
+  );
   notes.add(newNote);
 }
+
 
 //delete notes
 void deleteNote(String heading,String folder){

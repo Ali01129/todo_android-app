@@ -18,50 +18,24 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _controller = TextEditingController();
   final ToDoDatabase db = ToDoDatabase();
 
+  List<Note> todayNotes = [];
+  List<Note> yesterdayNotes = [];
+  List<Note> otherNotes = [];
+
   @override
   void initState() {
     super.initState();
-    if (_mybox.get("TODOLIST") == null) {
-      db.createInitialData();
-    } else {
-      db.loadData();
-    }
+    todayNotes = getNotesForToday();
+    yesterdayNotes = getNotesForYesterday();
+    otherNotes = getOtherNotes();
   }
 
-  void checkBoxChanged(bool? value, int index) {
+  void _refreshNotes() {
     setState(() {
-      db.todo[index][1] = !db.todo[index][1];
+      todayNotes = getNotesForToday();
+      yesterdayNotes = getNotesForYesterday();
+      otherNotes = getOtherNotes();
     });
-    db.updateDatabase();
-  }
-
-  void saveNewTask() {
-    setState(() {
-      db.todo.add([_controller.text, false]);
-      _controller.clear();
-    });
-    db.updateDatabase();
-    Navigator.of(context).pop();
-  }
-
-  void deleteTask(int index) {
-    setState(() {
-      db.todo.removeAt(index);
-    });
-    db.updateDatabase();
-  }
-
-  void createNewTask() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return DialogBox(
-          controller: _controller,
-          onCancel: () => Navigator.of(context).pop(),
-          onSave: saveNewTask,
-        );
-      },
-    );
   }
 
   Widget buildNotesSection(String title, List<Note> notes) {
@@ -92,6 +66,7 @@ class _HomePageState extends State<HomePage> {
                 taskname: note.heading,
                 note: note.note.toString(),
                 folder: note.folder,
+                refresh: ()=>_refreshNotes(),
               );
             },
           ),
@@ -102,10 +77,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    List<Note> todayNotes = getNotesForToday();
-    List<Note> yesterdayNotes = getNotesForYesterday();
-    List<Note> otherNotes = getOtherNotes();
 
     return Scaffold(
       backgroundColor: AppColors.getBackgroundColor(context),
@@ -131,7 +102,9 @@ class _HomePageState extends State<HomePage> {
             IconButton(
               icon: Icon(Icons.post_add, size: 35, color: Color(0xFFFE9402)),
               onPressed: () {
-                Navigator.pushNamed(context, '/CreateNote');
+                Navigator.pushNamed(context, '/CreateNote').then((value){
+                  _refreshNotes();
+                });
               },
             ),
           ],

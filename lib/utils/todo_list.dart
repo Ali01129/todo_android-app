@@ -6,15 +6,25 @@ class TodoList extends StatelessWidget {
   final String taskname;
   final String note;
   final String folder;
+  Function() refresh;
   TodoList({
     super.key,
     required this.note,
     required this.taskname,
     required this.folder,
+    required this.refresh,
   });
 
   @override
   Widget build(BuildContext context) {
+
+    String getShortenedNote(String note) {
+      String firstLine = note.split('\n').first;
+      return firstLine.length > 40 ? firstLine.substring(0, 40) + '...' : firstLine+ '...';
+    }
+
+
+
     return Slidable(
       endActionPane: ActionPane(
         motion: StretchMotion(),
@@ -22,6 +32,7 @@ class TodoList extends StatelessWidget {
           SlidableAction(
             onPressed: (index){
               deleteNote(taskname, folder);
+              refresh();
             },
             icon: Icons.delete,
             backgroundColor: Colors.red.shade500,
@@ -36,7 +47,8 @@ class TodoList extends StatelessWidget {
           Text(taskname,
             style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
           ),
-          Text(note+"...",
+          Text(
+            getShortenedNote(note),
             style: TextStyle(color: Colors.grey.shade400),
           ),
           Row(
