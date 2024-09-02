@@ -25,42 +25,50 @@ class TodoList extends StatelessWidget {
 
 
 
-    return Slidable(
-      endActionPane: ActionPane(
-        motion: StretchMotion(),
-        children: [
-          SlidableAction(
-            onPressed: (index){
-              deleteNote(taskname, folder);
-              refresh();
-            },
-            icon: Icons.delete,
-            backgroundColor: Colors.red.shade500,
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //task name
-          Text(taskname,
-            style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
-          ),
-          Text(
-            getShortenedNote(note),
-            style: TextStyle(color: Colors.grey.shade400),
-          ),
-          Row(
-            children: [
-              Icon(Icons.folder_open,color: Colors.grey.shade400,),
-              SizedBox(width: 5,),
-              Text(folder,
-                style: TextStyle(color: Colors.grey.shade400),
-              ),
-            ],
-          ),
-        ],
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, '/EditNote',arguments: {
+          'taskname':taskname,
+          'note':note,
+        }).then((value){refresh();});
+      },
+      child: Slidable(
+        endActionPane: ActionPane(
+          motion: StretchMotion(),
+          children: [
+            SlidableAction(
+              onPressed: (index){
+                deleteNote(taskname, folder);
+                refresh();
+              },
+              icon: Icons.delete,
+              backgroundColor: Colors.red.shade500,
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //task name
+            Text(taskname,
+              style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),
+            ),
+            Text(
+              getShortenedNote(note),
+              style: TextStyle(color: Colors.grey.shade400),
+            ),
+            Row(
+              children: [
+                Icon(Icons.folder_open,color: Colors.grey.shade400,),
+                SizedBox(width: 5,),
+                Text(folder,
+                  style: TextStyle(color: Colors.grey.shade400),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

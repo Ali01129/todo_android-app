@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/pages/create_note.dart';
+import 'package:todo/pages/edit_note.dart';
 import 'package:todo/pages/home_page.dart';
 
 void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter is fully initialized
   // Initialize Hive
   await Hive.initFlutter();
+
   // Open a box
-  await Hive.openBox("mybox");
+  await Hive.openBox("notes-app");
 
   runApp(const MyApp());
 }
@@ -38,6 +42,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       routes: {
         "/CreateNote":(context)=> NotePage(),
+        "/EditNote":(context)=>EditNote(taskname: 'Heading', note: 'Note...'),
       },
       home: const HomePage(),
     );

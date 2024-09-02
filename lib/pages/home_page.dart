@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:todo/data/database.dart';
-import 'package:todo/utils/dialog_box.dart';
 import 'package:todo/utils/todo_list.dart';
 import 'package:todo/data/newDatabase.dart';
 import 'package:todo/constants/colors.dart';
@@ -14,9 +12,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _mybox = Hive.box("mybox");
+  final _mybox = Hive.box("notes-app");
   final TextEditingController _controller = TextEditingController();
-  final ToDoDatabase db = ToDoDatabase();
 
   List<Note> todayNotes = [];
   List<Note> yesterdayNotes = [];
@@ -24,10 +21,18 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    if(_mybox.get("notes")==null){
+      createInitialData();
+      todayNotes = getNotesForToday();
+      yesterdayNotes = getNotesForYesterday();
+      otherNotes = getOtherNotes();
+    }
+    else{
+      todayNotes = getNotesForToday();
+      yesterdayNotes = getNotesForYesterday();
+      otherNotes = getOtherNotes();
+    }
     super.initState();
-    todayNotes = getNotesForToday();
-    yesterdayNotes = getNotesForYesterday();
-    otherNotes = getOtherNotes();
   }
 
   void _refreshNotes() {
