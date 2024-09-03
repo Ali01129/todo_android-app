@@ -123,14 +123,19 @@ class _HomePageState extends State<HomePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(Icons.chevron_left, size: 30, color: Color(0xFFFE9402)),
-                    Text(
-                      "Folders",
-                      style: TextStyle(color: Color(0xFFFE9402), fontSize: 18),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: (){
+                    Navigator.pushNamed(context, '/Folders');
+                  },
+                  child: Row(
+                    children: [
+                      Icon(Icons.chevron_left, size: 30, color: Color(0xFFFE9402)),
+                      Text(
+                        "Folders",
+                        style: TextStyle(color: Color(0xFFFE9402), fontSize: 18),
+                      ),
+                    ],
+                  ),
                 ),
                 Icon(Icons.more_horiz, size: 30, color: Color(0xFFFE9402)),
               ],

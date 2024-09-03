@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:todo/pages/create_note.dart';
 import 'package:todo/pages/edit_note.dart';
+import 'package:todo/pages/folders.dart';
 import 'package:todo/pages/home_page.dart';
 
 void main() async {
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "/CreateNote":(context)=> NotePage(),
         "/EditNote":(context)=>EditNote(taskname: 'Heading', note: 'Note...'),
+        "/Folders":(context)=>Folders(),
       },
       home: const HomePage(),
     );
