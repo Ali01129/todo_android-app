@@ -47,48 +47,58 @@ void createInitialData() {
   updateDatabase();
 }
 
-List<Note> getNotesForToday() {
+List<Note> getNotesForToday({String? folder}) {
+  print(notes);
   loadData();
+  print(folder);
   final today = DateTime.now();
-  return notes.where((note) =>
-  note.timestamp.year == today.year &&
-      note.timestamp.month == today.month &&
-      note.timestamp.day == today.day
-  ).toList();
+  return notes.where((note) {
+    final matchesDate = note.timestamp.year == today.year &&
+        note.timestamp.month == today.month &&
+        note.timestamp.day == today.day;
+    final matchesFolder = folder == null || note.folder == folder;
+    return matchesDate && matchesFolder;
+  }).toList();
 }
 
-List<Note> getNotesForYesterday() {
+List<Note> getNotesForYesterday({String? folder}) {
   loadData();
   final yesterday = DateTime.now().subtract(Duration(days: 1));
-  return notes.where((note) =>
-  note.timestamp.year == yesterday.year &&
-      note.timestamp.month == yesterday.month &&
-      note.timestamp.day == yesterday.day
-  ).toList();
+  return notes.where((note) {
+    final matchesDate = note.timestamp.year == yesterday.year &&
+        note.timestamp.month == yesterday.month &&
+        note.timestamp.day == yesterday.day;
+    final matchesFolder = folder == null || note.folder == folder;
+    return matchesDate && matchesFolder;
+  }).toList();
 }
 
-List<Note> getOtherNotes() {
+List<Note> getOtherNotes({String? folder}) {
   loadData();
   final today = DateTime.now();
   final yesterday = today.subtract(Duration(days: 1));
   return notes.where((note) {
     final noteDate = note.timestamp;
-    return !(noteDate.year == today.year &&
+    final isToday = noteDate.year == today.year &&
         noteDate.month == today.month &&
-        noteDate.day == today.day) &&
-        !(noteDate.year == yesterday.year &&
-            noteDate.month == yesterday.month &&
-            noteDate.day == yesterday.day);
+        noteDate.day == today.day;
+    final isYesterday = noteDate.year == yesterday.year &&
+        noteDate.month == yesterday.month &&
+        noteDate.day == yesterday.day;
+    final matchesFolder = folder == null || note.folder == folder;
+    return !isToday && !isYesterday && matchesFolder;
   }).toList();
 }
+
 
 // Adding notes function
 void addNote(String? heading, String? note, String folder) {
   if (heading == null || heading.isEmpty || note == null || note.isEmpty) {
     return;
   }
+  String newHeading=heading[0].toUpperCase()+heading.substring(1);
   Note newNote = Note(
-    heading: heading,
+    heading: newHeading,
     note: note,
     folder: folder,
     timestamp: DateTime.now(),

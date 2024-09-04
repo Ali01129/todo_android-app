@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:todo/data/newDatabase.dart';
 
 class NotePage extends StatelessWidget {
-  final TextEditingController _heading=TextEditingController();
-  final TextEditingController _note=TextEditingController();
+  final String folder;
+
+  final TextEditingController _heading = TextEditingController();
+  final TextEditingController _note = TextEditingController();
+
+  NotePage({Key? key, required this.folder}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
 
-    void createNote(){
-      List<Note> todayNotes=getNotesForToday();
-      print(todayNotes.length);
-      addNote(_heading.text, _note.text, 'All');
-      todayNotes=getNotesForToday();
-      print("after adding note");
-      print(todayNotes.length);
+    void createNote() {
+      addNote(_heading.text, _note.text, folder);
       Navigator.pop(context);
     }
 
@@ -24,7 +24,7 @@ class NotePage extends StatelessWidget {
           style: TextStyle(color: Color(0xFFFE9402), fontSize: 18),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back,size: 25,),
+          icon: Icon(Icons.arrow_back, size: 25),
           color: Color(0xFFFE9402),
           onPressed: () {
             Navigator.pop(context);
@@ -32,8 +32,16 @@ class NotePage extends StatelessWidget {
         ),
         leadingWidth: 25,
         actions: [
-          TextButton(onPressed: createNote,
-              child: Text('Done',style:TextStyle(color: Color(0xFFFE9402), fontSize: 18,),)),
+          TextButton(
+            onPressed: createNote,
+            child: Text(
+              'Done',
+              style: TextStyle(
+                color: Color(0xFFFE9402),
+                fontSize: 18,
+              ),
+            ),
+          ),
         ],
       ),
       body: Padding(

@@ -37,6 +37,10 @@ class _FoldersState extends State<Folders> {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Theme.of(context).brightness == Brightness.light
+        ? Colors.grey.shade600
+        : Colors.white;
+
     return Scaffold(
       backgroundColor: AppColors.getBackgroundColor(context),
       bottomNavigationBar: BottomAppBar(
@@ -60,7 +64,7 @@ class _FoldersState extends State<Folders> {
                       ),
                       title: Text(
                         'Create New Folder',
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: textColor),
                       ),
                       content: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.9,
@@ -68,16 +72,16 @@ class _FoldersState extends State<Folders> {
                           onChanged: (value) {
                             folderName = value;
                           },
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: textColor),
                           decoration: InputDecoration(
                             hintText: 'Folder Name',
-                            hintStyle: TextStyle(color: Colors.white54),
+                            hintStyle: TextStyle(color: textColor),
                             enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: BorderSide(color: textColor),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(color: Colors.white),
+                              borderSide: BorderSide(color: textColor),
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
@@ -87,7 +91,7 @@ class _FoldersState extends State<Folders> {
                         TextButton(
                           child: Text(
                             'Cancel',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: textColor),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -102,7 +106,7 @@ class _FoldersState extends State<Folders> {
                             ),
                             child: Text(
                               'Save',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: textColor),
                             ),
                           ),
                           onPressed: () {
@@ -142,17 +146,17 @@ class _FoldersState extends State<Folders> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.folder, color: Colors.white),
+                    Icon(Icons.folder, color: textColor),
                     SizedBox(width: 10),
                     Text(
                       "All Notes",
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: textColor),
                     ),
                   ],
                 ),
               ),
               onTap: () {
-                Navigator.pop(context);
+                Navigator.pushNamed(context, '/HomePage');
               },
             ),
             SizedBox(height: 30),
@@ -183,18 +187,18 @@ class _FoldersState extends State<Folders> {
                       ),
                       child: Row(
                         children: [
-                          Icon(Icons.folder, color: Colors.white),
+                          Icon(Icons.folder, color: textColor),
                           SizedBox(width: 10),
                           Text(
                             folder,
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: textColor),
                           ),
                         ],
                       ),
                     ),
                   ),
                   onTap: () {
-
+                    Navigator.pushNamed(context, '/FolderNotes',arguments: {"folder":folder});
                   },
                 ),
                 SizedBox(height: 10),

@@ -1,12 +1,13 @@
 import 'package:hive_flutter/hive_flutter.dart';
 final _mybox = Hive.box("notes-app");
 
-List<String> folders = ['cart','passwords','emails'];
+List<String> folders = [];
 
 
 void createFolder(String name) {
   if (!folders.contains(name)) {
-    folders.add(name);
+    String newName=name[0].toUpperCase() + name.substring(1);
+    folders.add(newName);
     _mybox.put('folders', folders);
   } else {
     print("Folder with the name '$name' already exists.");

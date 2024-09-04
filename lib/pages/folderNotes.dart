@@ -4,14 +4,16 @@ import 'package:todo/utils/todo_list.dart';
 import 'package:todo/data/newDatabase.dart';
 import 'package:todo/constants/colors.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class FolderNotes extends StatefulWidget {
+  final String folder;
+
+  const FolderNotes({Key? key, required this.folder}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<FolderNotes> createState() => _FolderNotesState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _FolderNotesState extends State<FolderNotes> {
   final _mybox = Hive.box("notes-app");
   final TextEditingController _controller = TextEditingController();
 
@@ -21,25 +23,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    if(_mybox.get("notes")==null){
-      createInitialData();
-      todayNotes = getNotesForToday();
-      yesterdayNotes = getNotesForYesterday();
-      otherNotes = getOtherNotes();
-    }
-    else{
-      todayNotes = getNotesForToday();
-      yesterdayNotes = getNotesForYesterday();
-      otherNotes = getOtherNotes();
-    }
     super.initState();
+
+    // Use the widget's folder property to filter notes
+    String folder = widget.folder;
+
+    if (_mybox.get("notes") == null) {
+      createInitialData();
+    }
+
+    todayNotes = getNotesForToday(folder: folder);
+    yesterdayNotes = getNotesForYesterday(folder: folder);
+    otherNotes = getOtherNotes(folder: folder);
   }
 
   void _refreshNotes() {
     setState(() {
-      todayNotes = getNotesForToday();
-      yesterdayNotes = getNotesForYesterday();
-      otherNotes = getOtherNotes();
+      todayNotes = getNotesForToday(folder: widget.folder);
+      yesterdayNotes = getNotesForYesterday(folder: widget.folder);
+      otherNotes = getOtherNotes(folder: widget.folder);
     });
   }
 
@@ -60,7 +62,7 @@ class _HomePageState extends State<HomePage> {
             color: Theme.of(context).primaryColor,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: ListView.separated(
+          child: ListView.builder(
             shrinkWrap: true,
             physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 25, vertical: 10),
@@ -71,27 +73,20 @@ class _HomePageState extends State<HomePage> {
                 taskname: note.heading,
                 note: note.note.toString(),
                 folder: note.folder,
-                refresh: () => _refreshNotes(),
+                refresh: _refreshNotes,
               );
             },
-            separatorBuilder: (context, index) => Divider(), // Divider between notes
           ),
         ),
       ],
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-
+    String folder = widget.folder;
     return Scaffold(
       backgroundColor: AppColors.getBackgroundColor(context),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: createNewTask,
-      //   child: Icon(Icons.add),
-      //   backgroundColor: Color(0xFFFE9402),
-      // ),
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         notchMargin: 0,
@@ -102,14 +97,14 @@ class _HomePageState extends State<HomePage> {
               child: Center(
                 child: Text(
                   "${todayNotes.length + yesterdayNotes.length + otherNotes.length} Notes",
-                  style: TextStyle(fontSize: 16), // Adjust the font size as needed
+                  style: TextStyle(fontSize: 16),
                 ),
               ),
             ),
             IconButton(
               icon: Icon(Icons.post_add, size: 35, color: Color(0xFFFE9402)),
               onPressed: () {
-                Navigator.pushNamed(context, '/CreateNote').then((value){
+                Navigator.pushNamed(context, '/CreateNote',arguments: {'folder':folder}).then((value) {
                   _refreshNotes();
                 });
               },
@@ -118,7 +113,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(right: 10,left: 10,top: 50),
+        padding: const EdgeInsets.only(right: 10, left: 10, top: 50),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -126,7 +121,7 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     Navigator.pushNamed(context, '/Folders');
                   },
                   child: Row(
